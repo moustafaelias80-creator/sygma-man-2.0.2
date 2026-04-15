@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sigma Tracker</string>
+    <string name="title_activity_main">Sigma Tracker</string>
+    <string name="package_name">com.sigmatracker.app</string>
+    <string name="custom_url_scheme">com.sigmatracker.app</string>
+</resources>
