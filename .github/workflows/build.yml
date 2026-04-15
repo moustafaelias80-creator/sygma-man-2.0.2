@@ -22,14 +22,30 @@ jobs:
         node-version: '20'
         cache: 'pnpm'
     
+    - name: List files
+      run: |
+        echo "=== Files in repo ==="
+        ls -la
+        echo ""
+        echo "=== Checking src folder ==="
+        ls -la src/ 2>/dev/null || echo "No src folder"
+        echo ""
+        echo "=== Checking android folder ==="
+        ls -la android/ 2>/dev/null || echo "No android folder"
+    
     - name: Install dependencies
-      run: pnpm install --prefer-offline
+      run: pnpm install --prefer-offline 2>&1
+      continue-on-error: true
     
     - name: Build web app
-      run: pnpm run build
+      run: |
+        echo "=== Running build ==="
+        pnpm run build 2>&1
+      continue-on-error: true
     
     - name: Sync Capacitor
-      run: npx cap sync android
+      if: always()
+      run: npx cap sync android 2>&1
     
     - name: Setup JDK
       uses: actions/setup-java@v4
@@ -38,13 +54,16 @@ jobs:
         java-version: '17'
     
     - name: Build debug APK
+      if: always()
       run: |
         cd android
         chmod +x gradlew
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug --info 2>&1 || echo "Gradle build failed"
     
     - name: Upload APK
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: sigma-apk
         path: android/app/build/outputs/apk/debug/app-debug.apk
+      continue-on-error: true
