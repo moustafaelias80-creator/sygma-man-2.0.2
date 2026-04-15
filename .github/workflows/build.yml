@@ -10,6 +10,32 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        sparse-checkout: |
+          package.json
+          pnpm-lock.yaml
+          src
+          android
+          public
+          vite.config.ts
+          index.html
+          tailwind.config.js
+          tsconfig.json
+          capacitor.config.ts
+    
+    - name: Check files
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo ""
+        echo "=== All files ==="
+        ls -la
+        echo ""
+        echo "=== package.json content ==="
+        head -10 package.json
+        echo ""
+        echo "=== src folder ==="
+        ls -la src/ || echo "No src folder"
     
     - name: Install pnpm
       uses: pnpm/action-setup@v4
